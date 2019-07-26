@@ -1,0 +1,7 @@
+{
+  "hostname":   "localhost",
+  "user":       "serve",
+  "password":   "",
+  "dbname":     "megabit_db",
+  "portName":   "COM3"
+}

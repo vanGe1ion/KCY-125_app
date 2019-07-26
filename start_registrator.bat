@@ -1,0 +1,1 @@
+python kcy-125_registrator.py
