@@ -1,44 +1,47 @@
+import datetime
+
 import pymysql.err as dbException
 
 from DBConnector import DBConnector
 from SerialListener import SerialListener
 from Queries import *
+from FunctionHub import *
+
+print("\n\r")
 
 configFile = "config.json"
-
 kcy125 = SerialListener(configFile)
-dbConnector = DBConnector(configFile)
+database = DBConnector(configFile)
 
+print("    Ready!\n\r")
 
 while True:
-    card = kcy125.ReadCard()
+    card = IDCardAdapter(kcy125.SerialRead())
+    database.Necromancy()
 
-    dbConnector.Necromancy()
-    selectRes = dbConnector.QueryExecute(SelectCurrentCard(card))
-    if selectRes:
-        dbConnector.ThrowError(1062)
+    queryResult = database.QueryExecute(SelectCurrentCard(card))
+    if queryResult:
+        database.ThrowError(DBErrorMessageHandler(1062, card))
     else:
-        selectRes = dbConnector.QueryExecute(SelectMaxID())
-
-        if selectRes:
-            result = int(dbConnector.QueryResult()[0]['Elem_ID'])
-            newID = result + 1
+        queryResult = database.QueryExecute(SelectTodayOrder(str(datetime.date.today()), card))
+        if queryResult is 0:
+            database.ThrowError(DBErrorMessageHandler(9001, card))
         else:
-            newID = 1
+            queryResult = database.QueryExecute(SelectMaxID())
 
-        try:
-            dbConnector.QueryExecute(Insert2Queue(newID, card))
-            dbConnector.QueryCommit()
+            if queryResult:
+                result = int(database.QueryResult()[0]['Elem_ID'])
+                newID = result + 1
+            else:
+                newID = 1
 
-            length = len(card)
-            fin = card[length-3]+card[length-2]+card[length-1]
-            incognito = ""
-            for x in range(length-3):
-                incognito += "*"
+            try:
+                database.QueryExecute(Insert2Queue(newID, card))
+                database.QueryCommit()
 
-            print("ID card " + incognito + fin + " was handled\n\r")
-            card = ""
-        except dbException.IntegrityError as error:
-            if card != "":
-                code, message = error.args
-                dbConnector.ThrowError(code)
+                print("    ID card " + Incognitor(card, 3) + " was handled\n\r")
+                card = ""
+            except dbException.IntegrityError as error:
+                if card != "":
+                    code = error.args[0]
+                    database.ThrowError(DBErrorMessageHandler(code, card))
