@@ -45,7 +45,7 @@ class SerialListener:
 
     def ThrowError(self, type):
         if type == "dnf":
-            print("\n\r    Serial error!\n\rUnable to open " + self.__portName + " serial port. " + self.__portName + " device not found\n\r")
+            print("\n\r    Serial error!\n\r    Unable to open " + self.__portName + " serial port. " + self.__deviceName + " device not found\n\r")
         elif type == "disconn":
             print("\n\r    Connection with " + self.__deviceName + " device on " + self.__portName + " serial port was lost\n\r")
         input()

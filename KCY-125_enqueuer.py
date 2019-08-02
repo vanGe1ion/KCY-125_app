@@ -7,15 +7,19 @@ from SerialListener import SerialListener
 from Queries import *
 from FunctionHub import *
 
-print("\n\r")
+print("\n\r    Initialisation...\n\r")
+print("    ---------------------------------------------------------")
 
 configFile = "config.json"
 kcy125 = SerialListener(configFile)
 database = DBConnector(configFile)
 
-print("    Ready!\n\r")
+print("    Initialisation finished!\n\r")
 
 while True:
+    print("\n\r\n\r\n\r    Person handling...")
+    print("    ---------------------------------------------------------")
+    print("    Press card...\n\r")
     card = IDCardAdapter(kcy125.SerialRead())
     database.Necromancy()
 
@@ -39,7 +43,7 @@ while True:
                 database.QueryExecute(Insert2Queue(newID, card))
                 database.QueryCommit()
 
-                print("    ID card " + Incognitor(card, 3) + " was handled\n\r")
+                print("    The " + Incognitor(card, 3) + " cardholder was enqueued\n\r")
                 card = ""
             except dbException.IntegrityError as error:
                 if card != "":

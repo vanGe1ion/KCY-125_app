@@ -58,7 +58,7 @@ class DBConnector:
             self.__connection.close()
             self.__connection = None
             self.__cursor = None
-            print("Closing database connection to " + self.__host + "\n\r")
+            print("    Closing database connection to " + self.__host + "\n\r")
 
     def GetConnectionInfo(self):
         print("    Database connection information\n\r" +

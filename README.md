@@ -1,6 +1,6 @@
 KCY-125 verify card reader app adapter for Megabit cafe application
 
-Current redist versions:<br>
+Current redist version:<br>
 -python v3.7.4
 
 
